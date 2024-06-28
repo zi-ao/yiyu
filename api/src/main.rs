@@ -8,6 +8,7 @@ use tracing_appender::{non_blocking, rolling};
 use tracing_subscriber::{
     filter::EnvFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt, Registry,
 };
+use time::{format_description, UtcOffset};
 
 #[tokio::main]
 async fn main() {
@@ -16,13 +17,26 @@ async fn main() {
     // 环境筛选
     let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("debug"));
 
+    // 定义自定义时间格式
+    let custom_format = format_description::parse("[year]-[month]-[day] [hour]:[minute]:[second]")
+        .expect("Invalid time format");
+    // 获取当前时区偏移量
+    let time_offset = UtcOffset::current_local_offset().unwrap_or_else(|_| UtcOffset::UTC);
+    // 创建自定义的时间格式器
+    let custom_timer = fmt::time::OffsetTime::new(time_offset, custom_format);
+
     // 输出到控制台中
-    let formatting_layer = fmt::layer().pretty().with_writer(std::io::stderr);
+    let formatting_layer = fmt::layer()
+        .pretty()
+        .with_timer(custom_timer.clone())
+        .with_writer(std::io::stderr);
     // 输出到文件中
     let file_appender = rolling::never("logs", "app.log");
     let (non_blocking_appender, _guard) = non_blocking(file_appender);
     let file_layer = fmt::layer()
+        .json()
         .with_ansi(false)
+        .with_timer(custom_timer)
         .with_writer(non_blocking_appender);
 
     // 注册
