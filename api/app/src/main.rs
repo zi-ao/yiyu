@@ -1,10 +1,10 @@
-use axum::{http::StatusCode, routing::get, Json, Router};
+use axum::{http::StatusCode, Json, Router, routing::get};
 use serde_json::Value;
 use tracing_appender::{non_blocking, rolling};
 use tracing_subscriber::{
-    filter::EnvFilter, layer::SubscriberExt, util::SubscriberInitExt, Registry,
+	filter::EnvFilter, layer::SubscriberExt, Registry, util::SubscriberInitExt,
 };
-use yiyu_core::logger;
+use yiyu_core::{db, logger};
 
 #[tokio::main]
 async fn main() {
@@ -31,6 +31,9 @@ async fn main() {
         .with(formatting_layer)
         .with(file_layer)
         .init();
+
+	// 连接数据库
+	let _db = db::connect().await;
 
     // 构建应用路由
     let app = Router::new()
