@@ -8,6 +8,10 @@ use yiyu_core::{db, logger};
 
 #[tokio::main]
 async fn main() {
+	// Load environment variables from .env file.
+	// Fails if .env file not found, not readable or invalid.
+	dotenvy::dotenv().unwrap();
+
     // 初始化 tracing
 
     // 环境筛选
