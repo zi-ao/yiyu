@@ -21,9 +21,14 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Articles::Title).string().not_null())
-					.col(ColumnDef::new(Articles::Introduction).string().not_null())
+                    .col(ColumnDef::new(Articles::Introduction).string().not_null())
                     .col(ColumnDef::new(Articles::Content).text().not_null())
-					.col(ColumnDef::new(Articles::UserId).integer().unique_key().not_null())
+                    .col(
+                        ColumnDef::new(Articles::UserId)
+                            .integer()
+                            .unique_key()
+                            .not_null(),
+                    )
                     .col(
                         ColumnDef::new(Articles::ViewCount)
                             .unsigned()
@@ -71,10 +76,10 @@ enum Articles {
     Table,
     Id,
     Title,
-	Introduction,
+    Introduction,
     Content,
-	UserId,
-	ViewCount,
+    UserId,
+    ViewCount,
     Status,
     IsDeleted,
     CreatedAt,

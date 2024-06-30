@@ -3478,7 +3478,6 @@ dependencies = [
  "time",
  "tokio",
  "tracing",
- "tracing-appender",
  "tracing-subscriber",
  "yiyu-core",
 ]
@@ -3490,6 +3489,7 @@ dependencies = [
  "sea-orm",
  "time",
  "tracing",
+ "tracing-appender",
  "tracing-subscriber",
 ]
 

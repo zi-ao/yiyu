@@ -1,6 +1,5 @@
 use axum::{http::StatusCode, routing::get, Json, Router};
 use serde_json::Value;
-use tracing_appender::{non_blocking, rolling};
 use tracing_subscriber::{
     filter::EnvFilter, layer::SubscriberExt, util::SubscriberInitExt, Registry,
 };
@@ -8,9 +7,9 @@ use yiyu_core::{db, logger};
 
 #[tokio::main]
 async fn main() {
-	// Load environment variables from .env file.
-	// Fails if .env file not found, not readable or invalid.
-	dotenvy::dotenv().unwrap();
+    // 从 .env 文件加载环境变量。
+    // 如果找不到.env文件、不可读或无效，则失败。
+    dotenvy::dotenv().unwrap();
 
     // 初始化 tracing
 
@@ -22,8 +21,7 @@ async fn main() {
     // 输出文本到控制台中
     let formatting_layer = logger::text_layer().with_writer(std::io::stderr);
     // 输出JSON到文件中
-    let file_appender = rolling::never("logs", "app.log");
-    let (non_blocking_appender, _guard) = non_blocking(file_appender);
+    let (non_blocking_appender, _guard) = logger::default_file_appender();
     let file_layer = logger::json_layer()
         .with_timer(custom_timer)
         .with_writer(non_blocking_appender);
