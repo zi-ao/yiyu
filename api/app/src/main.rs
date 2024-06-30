@@ -1,8 +1,8 @@
-use axum::{http::StatusCode, Json, Router, routing::get};
+use axum::{http::StatusCode, routing::get, Json, Router};
 use serde_json::Value;
 use tracing_appender::{non_blocking, rolling};
 use tracing_subscriber::{
-	filter::EnvFilter, layer::SubscriberExt, Registry, util::SubscriberInitExt,
+    filter::EnvFilter, layer::SubscriberExt, util::SubscriberInitExt, Registry,
 };
 use yiyu_core::{db, logger};
 
@@ -16,8 +16,7 @@ async fn main() {
     let custom_timer = logger::timer("[year]-[month]-[day] [hour]:[minute]:[second]");
 
     // 输出文本到控制台中
-    let formatting_layer = logger::text_layer()
-        .with_writer(std::io::stderr);
+    let formatting_layer = logger::text_layer().with_writer(std::io::stderr);
     // 输出JSON到文件中
     let file_appender = rolling::never("logs", "app.log");
     let (non_blocking_appender, _guard) = non_blocking(file_appender);
@@ -32,8 +31,8 @@ async fn main() {
         .with(file_layer)
         .init();
 
-	// 连接数据库
-	let _db = db::connect().await;
+    // 连接数据库
+    let _db = db::connect().await;
 
     // 构建应用路由
     let app = Router::new()

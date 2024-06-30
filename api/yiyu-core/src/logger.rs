@@ -1,11 +1,11 @@
 use time::{format_description, UtcOffset};
+use tracing_subscriber::fmt::format::Pretty;
 use tracing_subscriber::fmt::{
     format::{Format, Json, JsonFields},
     layer as fmt_layer,
     time::OffsetTime,
     Layer,
 };
-use tracing_subscriber::fmt::format::Pretty;
 
 /// 创建自定义的时间格式器
 ///
@@ -20,7 +20,7 @@ pub fn timer(s: &str) -> OffsetTime<Vec<format_description::BorrowedFormatItem>>
 }
 
 pub fn text_layer<S>() -> Layer<S, Pretty, Format<Pretty>> {
-	fmt_layer().pretty()
+    fmt_layer().pretty()
 }
 
 /// 拥有 JSON 格式器的 Layer
